@@ -4,5 +4,7 @@ This project contains ESP32 code for sensing the temperature of a cooling system
 
 Circuit diagram: https://www.flux.ai/dangarstu/pid-controller
 
+[Circuit diagram](images/circuit.png)
+
 This project is built from the template for [SensESP](https://github.com/SignalK/SensESP/).
 
