@@ -1,9 +1,8 @@
-# SensESP Project Template
+# Cooling water pump PID controller
 
-This repository provides a template for [SensESP](https://github.com/SignalK/SensESP/) projects.
-Fork, clone or download the repository and try building and uploading the project to an ESP32 device.
-You should immediately see output on the serial monitor!
+This project contains ESP32 code for sensing the temperature of a cooling system and driving an electric water pump at whatever speed is required to keep the engine at the specified temperature.
 
-To customize the template for your own purposes, edit the `src/main.cpp` and `platformio.ini` files.
+Circuit diagram: https://www.flux.ai/dangarstu/pid-controller
 
-Comprehensive documentation for SensESP, including how to get started with your own project, is available at the [SensESP documentation site](https://signalk.org/SensESP/).
+This project is built from the template for [SensESP](https://github.com/SignalK/SensESP/).
+
