@@ -66,7 +66,6 @@ void PID::set_input(float input, uint8_t inputChannel) {
     // Send the output.
     emit(Output);
   }
-
 }
 
 /*

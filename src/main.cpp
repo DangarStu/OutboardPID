@@ -12,6 +12,7 @@
 #include "sensesp/transforms/moving_average.h"
 #include "pid.h"
 #include "temperature-interpolator.cpp"
+#include <Arduino.h>
 
 #include "secrets.h" // Git ignored file
 
@@ -22,38 +23,41 @@ reactesp::ReactESP app;
 //Specify initial tuning parameters for the PID code.
 
 // Weighting of Proportion component
-float Kp=1.0;
+float Kp { 1.0 };
 
 // Weighting of Integral component
-float Ki=1.0;
+float Ki { 1.0 };
 
 // Weighting of Derivative component
-float Kd=1.0;
+float Kd { 1.0 };
 
 // Setpoint: the target temperature we are trying to maintain
 // +273.15 to convert to Kelvin.
-float Setpoint = 80.0 + 273.15;
+float Setpoint { 80.0 + 273.15 };
 
 // The maximum amount the temperature can get above the setpoint
 // before sounding the alarm
-const float alarm_margin = 10;
+const float alarm_margin { 10 };
 
 // GPIO number to use for the alarm buzzer.
 // This is the pin to send Vext out from the optocoupler.
-const uint8_t ALARM_PIN = 33;
+const uint8_t ALARM_PIN { 33 };
 
 // GPIO number to use for the coolant sensor input
-const uint8_t THERMISTOR_PIN = 36;
+const uint8_t THERMISTOR_PIN { 36 };
 
-// GPIO number to use for the Electronic Speed Controller
-const uint8_t ESC_PIN = 25;
+// PWM properties to use for the Electronic Speed Controller
+const int freq   { 5000 };
+const uint8_t ESC_PIN { 15 };
+const int ESC_CHANNEL { 0 };
+const int resolution { 8 };
 
 // Store the alarm state so it can be written to Signal K
 // An easily acted upon by Signal K
-uint8_t alarm_pin_state = LOW;
+uint8_t alarm_pin_state { LOW };
 
 // Record the last time the pump went off
-unsigned long last_change = 0;
+unsigned long last_change { 0 };
 
 // The setup function performs one-time application initialization.
 void setup() {
@@ -76,22 +80,25 @@ void setup() {
 
   // Voltage sent into the voltage divider circuit that includes the analog
   // sender
-  const float Vin = 3.29;
+  const float Vin { 3.29 };
 
   // The resistance, in ohms, of the fixed resistor (R1) in the voltage divider
   // circuit
-  const float R2 = 330.0;
+  const float R2 { 330.0 };
 
   // An AnalogInput gets the value from the microcontroller's AnalogIn pin,
   // which is a value from 0 to 4095.
   auto* analog_input = new AnalogInput(THERMISTOR_PIN, 200, "", 4096);
-
 
   // Create the PIDControler here so we can save a reference to it and
   // configure it with parameters not set in the constructor.
   PID* PIDController = new PID(Kp, Ki, Kd, Setpoint, "/coolant/temp/controller");
   PIDController->SetOutputLimits(0, 255);
   PIDController->SetSampleTime(sample_time);
+
+  // Setup the PWM configuration
+  ledcSetup(ESC_CHANNEL, freq, resolution);
+  ledcAttachPin(ESC_PIN, ESC_CHANNEL);
 
   // ------------------------------------------------------------------------------
   // A Lamba function to drive the water pump motor based on
@@ -101,7 +108,7 @@ void setup() {
     debugD("Output from PID is %F", input);
 
     // The PID output is already scaled 0-255 so simply write it out to the DAC
-    dacWrite(ESC_PIN, (int) input);
+    ledcWrite(ESC_CHANNEL, static_cast<int>(input));
 
     return input;
   };
