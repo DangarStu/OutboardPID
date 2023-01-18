@@ -71,7 +71,7 @@ void setup() {
   SensESPAppBuilder builder;
 
   sensesp_app = (&builder)
-    ->set_wifi(SSID, WIFI_PASSOWRD)
+    ->set_wifi(SSID, WIFI_PASSOWRD) // From user-created file 'secrets.h' 
     ->set_hostname("outboard") // Visit http://outboard.local to configure
     ->get_app();
 
