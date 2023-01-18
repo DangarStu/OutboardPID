@@ -22,7 +22,7 @@ reactesp::ReactESP app;
 
 //Specify initial tuning parameters for the PID code.
 
-// Weighting of Proportion component
+// Weighting of Proportional component
 float Kp { 1.0 };
 
 // Weighting of Integral component
