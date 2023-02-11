@@ -65,14 +65,15 @@ void setup() {
     SetupSerialDebug(115200);
   #endif
 
-  pinMode(ALARM_PIN, OUTPUT);
+  pinMode(ALARM_PIN, OUTPUT); 
 
   // Construct the global SensESPApp() object
   SensESPAppBuilder builder;
 
   sensesp_app = (&builder)
-    ->set_wifi(SSID, WIFI_PASSOWRD) // From user-created file 'secrets.h' 
-    ->set_hostname("outboard") // Visit http://outboard.local to configure
+    ->set_wifi(SSID, WIFI_PASSWORD) // From .gitignored user-created file 'secrets.h' 
+    ->set_hostname("outboard")      // Visit http://outboard.local to configure
+    ->set_sk_server(SIGNALK_IP, 80) // From .gitignored user-created file 'secrets.h' 
     ->get_app();
 
   // The sample time to set both the PID and Setpoint forwarder to
